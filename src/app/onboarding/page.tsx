@@ -7,11 +7,30 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Briefcase, GraduationCap, Presentation, MessageCircle, User, Star, Clock, Lock, CheckCircle2, Mic, Video, PhoneOff, ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import {
+  Briefcase,
+  GraduationCap,
+  Presentation,
+  MessageCircle,
+  User,
+  Star,
+  Clock,
+  Lock,
+  CheckCircle2,
+  Mic,
+  Video,
+  PhoneOff,
+  ArrowRight,
+} from "lucide-react";
 
 // Types
 type Step = "name" | "goal" | "details" | "avatar" | "practice" | "paywall";
@@ -32,18 +51,68 @@ type Avatar = {
 };
 
 const GOALS: Goal[] = [
-  { id: "interview", title: "Job Interview", icon: Briefcase, description: "Ace your next interview" },
-  { id: "exam", title: "Oral Exam", icon: GraduationCap, description: "Prepare for academic vivas" },
-  { id: "presentation", title: "Presentation", icon: Presentation, description: "Rehearse your pitch" },
-  { id: "conversation", title: "General Conversation", icon: MessageCircle, description: "Improve social fluency" },
+  {
+    id: "interview",
+    title: "Job Interview",
+    icon: Briefcase,
+    description: "Ace your next interview",
+  },
+  {
+    id: "exam",
+    title: "Oral Exam",
+    icon: GraduationCap,
+    description: "Prepare for academic vivas",
+  },
+  {
+    id: "presentation",
+    title: "Presentation",
+    icon: Presentation,
+    description: "Rehearse your pitch",
+  },
+  {
+    id: "conversation",
+    title: "General Conversation",
+    icon: MessageCircle,
+    description: "Improve social fluency",
+  },
 ];
 
 const AVATARS: Avatar[] = [
-  { id: "mentor", name: "Coach Aura", role: "Friendly Mentor", image: "/images/avatar-coach.png", style: "Friendly" },
-  { id: "examiner", name: "Dr. Reed", role: "Strict Examiner", image: "/images/avatar-teacher.png", style: "Strict" },
-  { id: "hr", name: "Sarah Chen", role: "HR Interviewer", image: "/images/avatar-job-interview.png", style: "Professional" },
-  { id: "hospitality", name: "Marcus", role: "Hospitality Recruiter", image: "/images/avatar-presentation.png", style: "Professional" },
-  { id: "tutor", name: "Elena", role: "Language Tutor", image: "/images/avatar-conversation.png", style: "Casual" },
+  {
+    id: "mentor",
+    name: "Coach Aura",
+    role: "Friendly Mentor",
+    image: "/images/avatar-coach.png",
+    style: "Friendly",
+  },
+  {
+    id: "examiner",
+    name: "Dr. Reed",
+    role: "Strict Examiner",
+    image: "/images/avatar-teacher.png",
+    style: "Strict",
+  },
+  {
+    id: "hr",
+    name: "Sarah Chen",
+    role: "HR Interviewer",
+    image: "/images/avatar-job-interview.png",
+    style: "Professional",
+  },
+  {
+    id: "hospitality",
+    name: "Marcus",
+    role: "Hospitality Recruiter",
+    image: "/images/avatar-presentation.png",
+    style: "Professional",
+  },
+  {
+    id: "tutor",
+    name: "Elena",
+    role: "Language Tutor",
+    image: "/images/avatar-conversation.png",
+    style: "Casual",
+  },
 ];
 
 export default function Onboarding() {
@@ -53,7 +122,6 @@ export default function Onboarding() {
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const router = useRouter();
 
   // Dynamic Form State
   const [details, setDetails] = useState({
@@ -72,7 +140,7 @@ export default function Onboarding() {
     // Conversation
     scenario: "",
     customScenario: "",
-    languageLevel: ""
+    languageLevel: "",
   });
 
   // Timer logic for practice mode
@@ -112,7 +180,7 @@ export default function Onboarding() {
   const containerVariants = {
     hidden: { opacity: 0, x: 20 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
-    exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
+    exit: { opacity: 0, x: -20, transition: { duration: 0.3 } },
   };
 
   // --- Step Components ---
@@ -120,19 +188,21 @@ export default function Onboarding() {
   const NameStep = () => (
     <div className="space-y-6 text-center max-w-md mx-auto">
       <div className="space-y-2">
-        <h1 className="text-3xl font-heading font-bold text-primary">Welcome to Mascotte.AI</h1>
+        <h1 className="text-3xl font-heading font-bold text-primary">
+          Welcome to Mascotte.AI
+        </h1>
         <p className="text-muted-foreground">Let's start with your name.</p>
       </div>
-      <Input 
-        placeholder="Enter your name" 
-        value={name} 
+      <Input
+        placeholder="Enter your name"
+        value={name}
         onChange={(e) => setName(e.target.value)}
         className="text-lg h-14 text-center"
         autoFocus
       />
-      <Button 
-        size="lg" 
-        className="w-full rounded-full h-12 text-lg" 
+      <Button
+        size="lg"
+        className="w-full rounded-full h-12 text-lg"
         onClick={handleNext}
         disabled={!name.trim()}
       >
@@ -144,31 +214,47 @@ export default function Onboarding() {
   const GoalStep = () => (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-heading font-bold">Hi {name}, what's your goal?</h2>
-        <p className="text-muted-foreground">Choose a practice mode to get started.</p>
+        <h2 className="text-2xl font-heading font-bold">
+          Hi {name}, what's your goal?
+        </h2>
+        <p className="text-muted-foreground">
+          Choose a practice mode to get started.
+        </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {GOALS.map((goal) => (
-          <Card 
+          <Card
             key={goal.id}
-            className={`cursor-pointer transition-all hover:shadow-md border-2 ${selectedGoal === goal.id ? "border-primary bg-primary/5" : "border-transparent hover:border-primary/20"}`}
+            className={`cursor-pointer transition-all hover:shadow-md border-2 ${
+              selectedGoal === goal.id
+                ? "border-primary bg-primary/5"
+                : "border-transparent hover:border-primary/20"
+            }`}
             onClick={() => setSelectedGoal(goal.id)}
           >
             <CardContent className="p-6 flex flex-col items-center text-center gap-3">
-              <div className={`p-3 rounded-full ${selectedGoal === goal.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+              <div
+                className={`p-3 rounded-full ${
+                  selectedGoal === goal.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
                 <goal.icon className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="font-bold">{goal.title}</h3>
-                <p className="text-sm text-muted-foreground">{goal.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {goal.description}
+                </p>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
-      <Button 
-        size="lg" 
-        className="w-full rounded-full h-12 text-lg" 
+      <Button
+        size="lg"
+        className="w-full rounded-full h-12 text-lg"
         onClick={handleNext}
         disabled={!selectedGoal}
       >
@@ -185,8 +271,13 @@ export default function Onboarding() {
             <>
               <div className="space-y-2">
                 <Label>Target Industry</Label>
-                <Select onValueChange={(v) => setDetails({...details, industry: v})} value={details.industry}>
-                  <SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger>
+                <Select
+                  onValueChange={(v) => setDetails({ ...details, industry: v })}
+                  value={details.industry}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select industry" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="tech">Technology</SelectItem>
                     <SelectItem value="finance">Finance</SelectItem>
@@ -199,10 +290,12 @@ export default function Onboarding() {
                   </SelectContent>
                 </Select>
                 {details.industry === "custom" && (
-                  <Input 
-                    placeholder="Enter your industry" 
+                  <Input
+                    placeholder="Enter your industry"
                     value={details.customIndustry}
-                    onChange={(e) => setDetails({...details, customIndustry: e.target.value})}
+                    onChange={(e) =>
+                      setDetails({ ...details, customIndustry: e.target.value })
+                    }
                     className="mt-2"
                     autoFocus
                   />
@@ -210,8 +303,15 @@ export default function Onboarding() {
               </div>
               <div className="space-y-2">
                 <Label>Role Level</Label>
-                <Select onValueChange={(v) => setDetails({...details, roleLevel: v})} value={details.roleLevel}>
-                  <SelectTrigger><SelectValue placeholder="Select level" /></SelectTrigger>
+                <Select
+                  onValueChange={(v) =>
+                    setDetails({ ...details, roleLevel: v })
+                  }
+                  value={details.roleLevel}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select level" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="intern">Internship</SelectItem>
                     <SelectItem value="junior">Junior / Entry Level</SelectItem>
@@ -228,8 +328,13 @@ export default function Onboarding() {
             <>
               <div className="space-y-2">
                 <Label>Subject / Field</Label>
-                <Select onValueChange={(v) => setDetails({...details, subject: v})} value={details.subject}>
-                  <SelectTrigger><SelectValue placeholder="Select subject" /></SelectTrigger>
+                <Select
+                  onValueChange={(v) => setDetails({ ...details, subject: v })}
+                  value={details.subject}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select subject" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="history">History</SelectItem>
                     <SelectItem value="biology">Biology</SelectItem>
@@ -243,10 +348,12 @@ export default function Onboarding() {
                   </SelectContent>
                 </Select>
                 {details.subject === "custom" && (
-                  <Input 
-                    placeholder="Enter your subject" 
+                  <Input
+                    placeholder="Enter your subject"
                     value={details.customSubject}
-                    onChange={(e) => setDetails({...details, customSubject: e.target.value})}
+                    onChange={(e) =>
+                      setDetails({ ...details, customSubject: e.target.value })
+                    }
                     className="mt-2"
                     autoFocus
                   />
@@ -254,13 +361,20 @@ export default function Onboarding() {
               </div>
               <div className="space-y-2">
                 <Label>Exam Type</Label>
-                <Select onValueChange={(v) => setDetails({...details, examType: v})} value={details.examType}>
-                  <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
+                <Select
+                  onValueChange={(v) => setDetails({ ...details, examType: v })}
+                  value={details.examType}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="thesis">Thesis Defense</SelectItem>
                     <SelectItem value="viva">Viva Voce</SelectItem>
-                    <SelectItem value="defense">Thesis Defense</SelectItem>
-                    <SelectItem value="presentation">Class Presentation</SelectItem>
-                    <SelectItem value="debate">Debate</SelectItem>
+                    <SelectItem value="language">
+                      Language Proficiency
+                    </SelectItem>
+                    <SelectItem value="medical">Medical Clinical</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -270,20 +384,50 @@ export default function Onboarding() {
           return (
             <>
               <div className="space-y-2">
-                <Label>Topic</Label>
-                <Input 
-                  placeholder="e.g., Q3 Sales Report" 
+                <Label>Presentation Topic</Label>
+                <Select
+                  onValueChange={(v) => setDetails({ ...details, topic: v })}
                   value={details.topic}
-                  onChange={(e) => setDetails({...details, topic: e.target.value})}
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select topic type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sales">Sales Pitch</SelectItem>
+                    <SelectItem value="update">Project Update</SelectItem>
+                    <SelectItem value="investor">Investor Deck</SelectItem>
+                    <SelectItem value="keynote">Keynote Speech</SelectItem>
+                    <SelectItem value="training">Training Session</SelectItem>
+                    <SelectItem value="launch">Product Launch</SelectItem>
+                    <SelectItem value="custom">Other (Type below)</SelectItem>
+                  </SelectContent>
+                </Select>
+                {details.topic === "custom" && (
+                  <Input
+                    placeholder="Enter your topic"
+                    value={details.customTopic}
+                    onChange={(e) =>
+                      setDetails({ ...details, customTopic: e.target.value })
+                    }
+                    className="mt-2"
+                    autoFocus
+                  />
+                )}
               </div>
               <div className="space-y-2">
-                <Label>Audience</Label>
-                <Select onValueChange={(v) => setDetails({...details, audience: v})} value={details.audience}>
-                  <SelectTrigger><SelectValue placeholder="Select audience" /></SelectTrigger>
+                <Label>Target Audience</Label>
+                <Select
+                  onValueChange={(v) => setDetails({ ...details, audience: v })}
+                  value={details.audience}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select audience" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="investors">Investors</SelectItem>
-                    <SelectItem value="team">Internal Team</SelectItem>
+                    <SelectItem value="colleagues">
+                      Colleagues / Team
+                    </SelectItem>
                     <SelectItem value="clients">Clients</SelectItem>
                     <SelectItem value="students">Students</SelectItem>
                     <SelectItem value="public">General Public</SelectItem>
@@ -297,35 +441,56 @@ export default function Onboarding() {
             <>
               <div className="space-y-2">
                 <Label>Scenario</Label>
-                <Select onValueChange={(v) => setDetails({...details, scenario: v})} value={details.scenario}>
-                  <SelectTrigger><SelectValue placeholder="Select scenario" /></SelectTrigger>
+                <Select
+                  onValueChange={(v) => setDetails({ ...details, scenario: v })}
+                  value={details.scenario}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select scenario" />
+                  </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="coffee">Coffee Shop Chat</SelectItem>
+                    <SelectItem value="casual">Casual Chat</SelectItem>
                     <SelectItem value="networking">Networking Event</SelectItem>
+                    <SelectItem value="date">First Date</SelectItem>
+                    <SelectItem value="conflict">
+                      Conflict Resolution
+                    </SelectItem>
+                    <SelectItem value="negotiation">Negotiation</SelectItem>
                     <SelectItem value="travel">Travel / Directions</SelectItem>
-                    <SelectItem value="dating">First Date</SelectItem>
+                    <SelectItem value="food">Ordering Food</SelectItem>
                     <SelectItem value="custom">Other (Type below)</SelectItem>
                   </SelectContent>
                 </Select>
                 {details.scenario === "custom" && (
-                  <Input 
-                    placeholder="Enter scenario" 
+                  <Input
+                    placeholder="Enter your scenario"
                     value={details.customScenario}
-                    onChange={(e) => setDetails({...details, customScenario: e.target.value})}
+                    onChange={(e) =>
+                      setDetails({ ...details, customScenario: e.target.value })
+                    }
                     className="mt-2"
                     autoFocus
                   />
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Language Level</Label>
-                <Select onValueChange={(v) => setDetails({...details, languageLevel: v})} value={details.languageLevel}>
-                  <SelectTrigger><SelectValue placeholder="Select level" /></SelectTrigger>
+                <Label>Difficulty Level</Label>
+                <Select
+                  onValueChange={(v) =>
+                    setDetails({ ...details, languageLevel: v })
+                  }
+                  value={details.languageLevel}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select level" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="beginner">Beginner (A1-A2)</SelectItem>
-                    <SelectItem value="intermediate">Intermediate (B1-B2)</SelectItem>
+                    <SelectItem value="intermediate">
+                      Intermediate (B1-B2)
+                    </SelectItem>
                     <SelectItem value="advanced">Advanced (C1-C2)</SelectItem>
-                    <SelectItem value="native">Native-like</SelectItem>
+                    <SelectItem value="native">Native / Fluent</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -336,19 +501,59 @@ export default function Onboarding() {
       }
     };
 
+    const isFormValid = () => {
+      switch (selectedGoal) {
+        case "interview":
+          return (
+            (details.industry === "custom"
+              ? details.customIndustry
+              : details.industry) && details.roleLevel
+          );
+        case "exam":
+          return (
+            (details.subject === "custom"
+              ? details.customSubject
+              : details.subject) && details.examType
+          );
+        case "presentation":
+          return (
+            (details.topic === "custom"
+              ? details.customTopic
+              : details.topic) && details.audience
+          );
+        case "conversation":
+          return (
+            (details.scenario === "custom"
+              ? details.customScenario
+              : details.scenario) && details.languageLevel
+          );
+        default:
+          return false;
+      }
+    };
+
     return (
       <div className="space-y-6 max-w-md mx-auto">
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-heading font-bold">Tell us more</h2>
-          <p className="text-muted-foreground">Customize your practice session.</p>
+          <p className="text-muted-foreground">
+            Customize your{" "}
+            {GOALS.find((g) => g.id === selectedGoal)?.title.toLowerCase()}{" "}
+            session.
+          </p>
         </div>
-        <div className="space-y-4">
-          {renderForm()}
-        </div>
-        <Button 
-          size="lg" 
-          className="w-full rounded-full h-12 text-lg" 
+
+        <Card>
+          <CardContent className="p-6 space-y-4 text-left">
+            {renderForm()}
+          </CardContent>
+        </Card>
+
+        <Button
+          size="lg"
+          className="w-full rounded-full h-12 text-lg"
           onClick={handleNext}
+          disabled={!isFormValid()}
         >
           Continue
         </Button>
@@ -359,87 +564,150 @@ export default function Onboarding() {
   const AvatarStep = () => (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-heading font-bold">Choose your partner</h2>
-        <p className="text-muted-foreground">Select an AI avatar to practice with.</p>
+        <h2 className="text-2xl font-heading font-bold">
+          Pick your Practice Partner
+        </h2>
+        <p className="text-muted-foreground">
+          Select the personality that fits your needs.
+        </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {AVATARS.map((avatar) => (
-          <Card 
+          <div
             key={avatar.id}
-            className={`cursor-pointer transition-all hover:shadow-md border-2 overflow-hidden ${selectedAvatar === avatar.id ? "border-primary ring-2 ring-primary/20" : "border-transparent hover:border-primary/20"}`}
+            className={`relative group cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${
+              selectedAvatar === avatar.id
+                ? "border-primary ring-2 ring-primary/20 scale-105"
+                : "border-transparent hover:border-primary/30"
+            }`}
             onClick={() => setSelectedAvatar(avatar.id)}
           >
-            <div className="aspect-square bg-muted relative">
-              <img src={avatar.image} alt={avatar.name} className="w-full h-full object-cover" />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 text-white">
-                <div className="font-bold text-sm">{avatar.name}</div>
-                <div className="text-xs opacity-80">{avatar.role}</div>
+            <div className="aspect-[3/4] relative">
+              <img
+                src={avatar.image}
+                alt={avatar.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                <p className="font-bold text-sm">{avatar.name}</p>
+                <p className="text-xs opacity-80">{avatar.role}</p>
               </div>
+              {selectedAvatar === avatar.id && (
+                <div className="absolute top-2 right-2 bg-primary text-primary-foreground p-1 rounded-full">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+              )}
             </div>
-            <CardContent className="p-3 text-center">
-              <Badge variant="secondary" className="text-xs">{avatar.style}</Badge>
-            </CardContent>
-          </Card>
+          </div>
         ))}
       </div>
-      <div className="max-w-md mx-auto">
-        <Button 
-          size="lg" 
-          className="w-full rounded-full h-12 text-lg" 
-          onClick={handleNext}
-          disabled={!selectedAvatar}
-        >
-          Start Session
-        </Button>
-      </div>
+      <Button
+        size="lg"
+        className="w-full rounded-full h-12 text-lg max-w-md mx-auto block"
+        onClick={handleNext}
+        disabled={!selectedAvatar}
+      >
+        Start Practicing
+      </Button>
     </div>
   );
 
   const PracticeStep = () => {
-    const avatar = AVATARS.find(a => a.id === selectedAvatar);
-    
+    const avatar = AVATARS.find((a) => a.id === selectedAvatar);
+
     return (
-      <div className="h-[80vh] flex flex-col relative rounded-3xl overflow-hidden bg-black shadow-2xl border-4 border-background">
-        {/* Video Feed */}
-        <div className="flex-1 relative">
-          <img src={avatar?.image} alt="Avatar" className="w-full h-full object-cover opacity-80" />
-          
-          {/* Overlay UI */}
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-            <div className="bg-black/40 backdrop-blur-md text-white px-4 py-2 rounded-full flex items-center gap-2 border border-white/10">
-              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="font-mono font-medium">{formatTime(timeLeft)}</span>
-            </div>
-            <Badge variant="outline" className="bg-black/40 backdrop-blur-md text-white border-white/20">
-              {avatar?.name} • {avatar?.role}
+      <div className="h-[calc(100vh-4rem)] flex flex-col max-w-5xl mx-auto w-full">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4 px-4">
+          <div className="flex items-center gap-2">
+            <Badge
+              variant="outline"
+              className="animate-pulse border-red-500 text-red-500 flex gap-1"
+            >
+              <div className="w-2 h-2 rounded-full bg-red-500" />
+              REC
             </Badge>
+            <span className="text-sm font-medium text-muted-foreground">
+              {GOALS.find((g) => g.id === selectedGoal)?.title} Mode
+            </span>
           </div>
-
-          {/* User Camera Preview (PiP) */}
-          <div className="absolute bottom-4 right-4 w-32 h-48 bg-gray-900 rounded-xl border-2 border-white/20 overflow-hidden shadow-lg">
-            <div className="w-full h-full flex items-center justify-center text-white/50">
-              <User className="w-12 h-12" />
-            </div>
-          </div>
-
-          {/* Captions Placeholder */}
-          <div className="absolute bottom-24 left-8 right-48 text-center">
-             <p className="text-white/90 text-lg font-medium drop-shadow-md bg-black/20 backdrop-blur-sm inline-block px-4 py-2 rounded-xl">
-               "Hello {name}! I see you're interested in {selectedGoal === 'interview' ? 'a job interview' : 'practicing'}. Let's begin."
-             </p>
+          <div className="flex items-center gap-2 bg-muted/50 px-3 py-1 rounded-full">
+            <Clock className="w-4 h-4 text-primary" />
+            <span
+              className={`font-mono font-medium ${
+                timeLeft < 60 ? "text-red-500" : ""
+              }`}
+            >
+              {formatTime(timeLeft)}
+            </span>
+            <span className="text-xs text-muted-foreground">Free Trial</span>
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="h-20 bg-background border-t flex items-center justify-center gap-6 px-8">
-          <Button variant="outline" size="icon" className="rounded-full w-12 h-12 border-2">
-            <Video className="w-5 h-5" />
-          </Button>
-          <Button variant="destructive" size="icon" className="rounded-full w-14 h-14 shadow-lg" onClick={() => { setIsTimerRunning(false); setStep("paywall"); }}>
-            <PhoneOff className="w-6 h-6" />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-full w-12 h-12 border-2">
-            <Mic className="w-5 h-5" />
+        {/* Main Video Area */}
+        <div className="flex-1 relative bg-black rounded-3xl overflow-hidden shadow-2xl mb-4 group">
+          <img
+            src={avatar?.image}
+            alt="Avatar"
+            className="w-full h-full object-cover opacity-90"
+          />
+
+          {/* AI Overlay UI */}
+          <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between">
+            <div className="bg-black/40 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-white max-w-lg">
+              <p className="text-sm text-white/60 mb-1">{avatar?.role}</p>
+              <p className="text-lg font-medium">
+                "Tell me about a time you had to handle a difficult situation."
+              </p>
+            </div>
+
+            {/* User Self View */}
+            <div className="w-32 h-48 bg-zinc-800 rounded-xl border-2 border-white/10 overflow-hidden shadow-lg relative">
+              <div className="absolute inset-0 flex items-center justify-center text-white/20">
+                <User className="w-12 h-12" />
+              </div>
+              <div className="absolute bottom-2 left-2 text-[10px] text-white/80 bg-black/50 px-1.5 py-0.5 rounded">
+                You
+              </div>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4">
+            <Button
+              size="icon"
+              variant="secondary"
+              className="rounded-full w-12 h-12 bg-white/10 hover:bg-white/20 text-white border-none backdrop-blur-sm"
+            >
+              <Mic className="w-5 h-5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="destructive"
+              className="rounded-full w-14 h-14 shadow-lg"
+              onClick={() => setStep("paywall")}
+            >
+              <PhoneOff className="w-6 h-6" />
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              className="rounded-full w-12 h-12 bg-white/10 hover:bg-white/20 text-white border-none backdrop-blur-sm"
+            >
+              <Video className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-destructive"
+            onClick={() => setStep("paywall")}
+          >
+            End Session
           </Button>
         </div>
       </div>
@@ -451,10 +719,15 @@ export default function Onboarding() {
       <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary mb-6">
         <Lock className="w-10 h-10" />
       </div>
-      
+
       <div className="space-y-2">
-        <h2 className="text-3xl font-heading font-bold">Unlock Unlimited Practice</h2>
-        <p className="text-muted-foreground">Your free trial has ended. Upgrade to continue mastering your communication skills.</p>
+        <h2 className="text-3xl font-heading font-bold">
+          Unlock Unlimited Practice
+        </h2>
+        <p className="text-muted-foreground">
+          Your free trial has ended. Upgrade to continue mastering your
+          communication skills.
+        </p>
       </div>
 
       {/* One-off Payment Option */}
@@ -462,11 +735,17 @@ export default function Onboarding() {
         <CardContent className="p-4 flex items-center justify-between">
           <div className="text-left space-y-1">
             <div className="font-bold">One-off Session Report</div>
-            <div className="text-sm text-muted-foreground">Get AI summary, analytics & recording</div>
+            <div className="text-sm text-muted-foreground">
+              Get AI summary, analytics & recording
+            </div>
           </div>
           <div className="text-right">
             <div className="font-bold text-lg">€2.99</div>
-            <Button variant="outline" size="sm" className="mt-1 h-8 rounded-full">
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-1 h-8 rounded-full"
+            >
               Get it Now
             </Button>
           </div>
@@ -478,7 +757,9 @@ export default function Onboarding() {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or upgrade for unlimited access</span>
+          <span className="bg-background px-2 text-muted-foreground">
+            Or upgrade for unlimited access
+          </span>
         </div>
       </div>
 
@@ -509,10 +790,13 @@ export default function Onboarding() {
         </CardContent>
       </Card>
 
-      <Button size="lg" className="w-full rounded-full h-12 text-lg shadow-lg shadow-primary/20">
+      <Button
+        size="lg"
+        className="w-full rounded-full h-12 text-lg shadow-lg shadow-primary/20"
+      >
         Upgrade Now
       </Button>
-      
+
       <p className="text-xs text-muted-foreground">
         Cancel anytime. No hidden fees.
       </p>
