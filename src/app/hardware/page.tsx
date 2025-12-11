@@ -4,19 +4,103 @@ import { useState } from "react";
 import { Search, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 import Link from "next/link";
 
 export default function Hardware() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("86inch");
   const [selectedColor, setSelectedColor] = useState("white");
-  
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    company: "",
+    email: "",
+    telephone: "",
+    request: "",
+  });
+
   const images = [
     "/images/brands-kiosk-1.png",
     "/images/brands-kiosk-2.png",
     "/images/omni-holobox.png",
-    "/images/omni-kiosk.png"
+    "/images/omni-kiosk.png",
   ];
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/sendRequest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subject: "Holobox Request",
+          name: formData.name,
+          company: formData.company,
+          email: formData.email,
+          telephone: formData.telephone,
+          size: selectedSize,
+          color: selectedColor,
+          request: formData.request,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Request Sent!", {
+          description: "We'll get back to you within 24 hours.",
+          position: "top-center",
+        });
+        setIsDialogOpen(false);
+        setFormData({
+          name: "",
+          company: "",
+          email: "",
+          telephone: "",
+          request: "",
+        });
+      } else {
+        toast.error("Failed to send request", {
+          description: data.error || "Please try again later.",
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Something went wrong", {
+        description: "Please try again later.",
+        position: "top-center",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-20">
@@ -24,16 +108,19 @@ export default function Hardware() {
       <div className="container mb-8">
         <div className="flex items-center justify-between">
           <Link href="/brands">
-            <Button variant="ghost" className="gap-2 pl-0 hover:bg-transparent hover:text-primary">
+            <Button
+              variant="ghost"
+              className="gap-2 pl-0 hover:bg-transparent hover:text-primary"
+            >
               <ArrowLeft className="w-4 h-4" />
               Back to Brands
             </Button>
           </Link>
           <div className="relative w-64 hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Search..." 
+            <input
+              type="text"
+              placeholder="Search..."
               className="w-full pl-9 pr-4 py-2 rounded-full border bg-muted/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
@@ -45,9 +132,9 @@ export default function Hardware() {
           {/* Left Column - Image Gallery */}
           <div className="space-y-4">
             <div className="relative aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden border">
-              <img 
-                src={images[selectedImage]} 
-                alt="86inch AI Holobox" 
+              <img
+                src={images[selectedImage]}
+                alt="86inch AI Holobox"
                 className="w-full h-full object-cover"
               />
               <div className="absolute top-4 left-4 bg-white px-2 py-1 rounded border text-xs font-bold text-blue-600">
@@ -57,17 +144,21 @@ export default function Hardware() {
                 <Search className="w-4 h-4 text-gray-600" />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-4 gap-4">
               {images.map((img, i) => (
-                <div 
-                  key={i} 
-                  className={`aspect-square rounded-lg overflow-hidden border cursor-pointer transition-all ${selectedImage === i ? 'ring-2 ring-primary border-primary' : 'hover:border-gray-400'}`}
+                <div
+                  key={i}
+                  className={`aspect-square rounded-lg overflow-hidden border cursor-pointer transition-all ${
+                    selectedImage === i
+                      ? "ring-2 ring-primary border-primary"
+                      : "hover:border-gray-400"
+                  }`}
                   onClick={() => setSelectedImage(i)}
                 >
-                  <img 
-                    src={img} 
-                    alt={`View ${i + 1}`} 
+                  <img
+                    src={img}
+                    alt={`View ${i + 1}`}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -82,24 +173,40 @@ export default function Hardware() {
                 {selectedSize} AI Holobox Transparent LCD 3D Holographic Display
               </h1>
               <p className="font-medium text-slate-700 mb-6">
-                {selectedSize} AI Holobox Transparent LCD 3D Holographic Display with Camera and Microphone
+                {selectedSize} AI Holobox Transparent LCD 3D Holographic Display
+                with Camera and Microphone
               </p>
-              
+
               <ul className="space-y-3 text-slate-600 text-sm leading-relaxed list-disc pl-5 marker:text-slate-400">
                 <li>Active area 1897*1068</li>
-                <li>{selectedSize} 3D Holographic monitor dimension 2130*1282*600mm</li>
+                <li>
+                  {selectedSize} 3D Holographic monitor dimension
+                  2130*1282*600mm
+                </li>
                 <li>Resolution: 3840*2160</li>
                 <li>Brightness 420nits</li>
                 <li>Weight 210kg</li>
                 <li>Viewing angle: 89/89/89/89(U/D/L/R)</li>
                 <li>Hot size: 21.5inch, 32inch 75inch, 86inch, 98inch</li>
                 <li>10 points Touch screen</li>
-                <li>The operating system options for this product include HDMI input, latest Android 9.0, and Windows 10 i3/i5/i7.</li>
+                <li>
+                  The operating system options for this product include HDMI
+                  input, latest Android 9.0, and Windows 10 i3/i5/i7.
+                </li>
                 <li>USB plug and play</li>
                 <li>It is available in black and white and orange color</li>
-                <li>Holo.One transparent LCD screen can be installed on a wall or embedded in the shopping mall.</li>
-                <li>Holo.One digital signage pricing terms include EXW, FOB, CIF, and DAP.</li>
-                <li>Holo.One offers a customized solution to fit your specific needs and provide free branding logo services.</li>
+                <li>
+                  Holo.One transparent LCD screen can be installed on a wall or
+                  embedded in the shopping mall.
+                </li>
+                <li>
+                  Holo.One digital signage pricing terms include EXW, FOB, CIF,
+                  and DAP.
+                </li>
+                <li>
+                  Holo.One offers a customized solution to fit your specific
+                  needs and provide free branding logo services.
+                </li>
               </ul>
             </div>
 
@@ -108,19 +215,21 @@ export default function Hardware() {
               <div className="space-y-3">
                 <Label className="text-base font-semibold">Size</Label>
                 <div className="flex flex-wrap gap-3">
-                  {["21.5inch", "32inch", "75inch", "86inch", "98inch"].map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-all border ${
-                        selectedSize === size 
-                          ? "bg-primary text-primary-foreground border-primary shadow-sm" 
-                          : "bg-white text-slate-700 border-slate-200 hover:border-primary/50 hover:bg-slate-50"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                  {["21.5inch", "32inch", "75inch", "86inch", "98inch"].map(
+                    (size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all border ${
+                          selectedSize === size
+                            ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                            : "bg-white text-slate-700 border-slate-200 hover:border-primary/50 hover:bg-slate-50"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
 
@@ -129,16 +238,30 @@ export default function Hardware() {
                 <div className="flex gap-4">
                   {[
                     { id: "black", name: "Black", class: "bg-black" },
-                    { id: "white", name: "White", class: "bg-white border-slate-200" },
-                    { id: "orange", name: "Orange", class: "bg-orange-500" }
+                    {
+                      id: "white",
+                      name: "White",
+                      class: "bg-white border-slate-200",
+                    },
+                    { id: "orange", name: "Orange", class: "bg-orange-500" },
                   ].map((color) => (
-                    <div 
+                    <div
                       key={color.id}
                       className={`relative cursor-pointer group`}
                       onClick={() => setSelectedColor(color.id)}
                     >
-                      <div className={`w-10 h-10 rounded-full border shadow-sm ${color.class} ${selectedColor === color.id ? 'ring-2 ring-offset-2 ring-primary' : ''}`} />
-                      <span className="text-xs text-center block mt-1 font-medium text-slate-600">{color.name}</span>
+                      <div
+                        className={`w-10 h-10 rounded-full border shadow-sm ${
+                          color.class
+                        } ${
+                          selectedColor === color.id
+                            ? "ring-2 ring-offset-2 ring-primary"
+                            : ""
+                        }`}
+                      />
+                      <span className="text-xs text-center block mt-1 font-medium text-slate-600">
+                        {color.name}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -146,9 +269,109 @@ export default function Hardware() {
             </div>
 
             <div className="pt-2">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-6 text-lg font-medium w-full sm:w-auto shadow-sm">
-                Request Pricing
-              </Button>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-md px-8 py-6 text-lg font-medium w-full sm:w-auto shadow-sm">
+                    Request Pricing
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-heading">
+                      Request Holobox Pricing
+                    </DialogTitle>
+                    <DialogDescription>
+                      Fill out the form below and we'll get back to you within
+                      24 hours.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Name *</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        required
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="company">Company *</Label>
+                      <Input
+                        id="company"
+                        name="company"
+                        required
+                        value={formData.company}
+                        onChange={handleInputChange}
+                        placeholder="Company name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email *</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="telephone">Telephone *</Label>
+                      <Input
+                        id="telephone"
+                        name="telephone"
+                        type="tel"
+                        required
+                        value={formData.telephone}
+                        onChange={handleInputChange}
+                        placeholder="+1 (555) 000-0000"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Size</Label>
+                        <Input
+                          value={selectedSize}
+                          disabled
+                          className="bg-muted"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Color</Label>
+                        <Input
+                          value={selectedColor}
+                          disabled
+                          className="bg-muted capitalize"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="request">Additional Requirements</Label>
+                      <Textarea
+                        id="request"
+                        name="request"
+                        value={formData.request}
+                        onChange={handleInputChange}
+                        placeholder="Tell us about your project requirements..."
+                        rows={4}
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full"
+                      size="lg"
+                    >
+                      {isSubmitting ? "Sending..." : "Send Request"}
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>

@@ -1,13 +1,15 @@
 import "./globals.css";
 import { Inter, Outfit } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import Layout from "@/components/Layout";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata = {
   title: "Mascotte.AI - Intelligent AI Avatars",
-  description: "Deploy intelligent AI avatars across your digital and physical touchpoints.",
+  description:
+    "Deploy intelligent AI avatars across your digital and physical touchpoints.",
 };
 
 export default function RootLayout({
@@ -18,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <body className="font-sans antialiased">
-        {children}
-        <Toaster />
+        <Layout>
+          {children}
+          <Toaster />
+        </Layout>
       </body>
     </html>
   );
